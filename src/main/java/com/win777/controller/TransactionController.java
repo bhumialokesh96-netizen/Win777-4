@@ -4,7 +4,6 @@ import com.win777.dto.TransactionDTO;
 import com.win777.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Transaction Management", description = "APIs for viewing transaction history")
 public class TransactionController {
 
-    @Autowired
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
+
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
 
     @GetMapping("/user/{userId}")
     @Operation(summary = "Get user transactions", description = "Retrieve paginated transaction history for a user")

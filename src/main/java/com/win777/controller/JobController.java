@@ -6,7 +6,6 @@ import com.win777.service.JobService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +17,11 @@ import java.util.List;
 @Tag(name = "Job Management", description = "APIs for initiating and tracking jobs")
 public class JobController {
 
-    @Autowired
-    private JobService jobService;
+    private final JobService jobService;
+
+    public JobController(JobService jobService) {
+        this.jobService = jobService;
+    }
 
     @PostMapping("/user/{userId}")
     @Operation(summary = "Initiate a job", description = "Create and start a new job for a user")

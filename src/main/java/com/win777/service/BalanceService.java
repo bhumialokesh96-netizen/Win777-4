@@ -4,14 +4,16 @@ import com.win777.dto.BalanceResponseDTO;
 import com.win777.entity.UserEntity;
 import com.win777.exception.ResourceNotFoundException;
 import com.win777.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BalanceService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public BalanceService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public BalanceResponseDTO getBalance(Long userId) {
         UserEntity user = userRepository.findById(userId)

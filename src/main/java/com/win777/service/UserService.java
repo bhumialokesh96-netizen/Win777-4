@@ -8,7 +8,6 @@ import com.win777.exception.DuplicateResourceException;
 import com.win777.exception.ResourceNotFoundException;
 import com.win777.repository.ReferralRepository;
 import com.win777.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +16,13 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final ReferralRepository referralRepository;
 
-    @Autowired
-    private ReferralRepository referralRepository;
+    public UserService(UserRepository userRepository, ReferralRepository referralRepository) {
+        this.userRepository = userRepository;
+        this.referralRepository = referralRepository;
+    }
 
     @Transactional
     public UserDTO register(RegistrationRequestDTO request) {
@@ -37,7 +38,8 @@ public class UserService {
 
         UserEntity user = new UserEntity();
         user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword()); // In production, hash this password
+        // TODO: In production, hash password using BCryptPasswordEncoder before storing
+        user.setPassword(request.getPassword());
         user.setEmail(request.getEmail());
         user.setBalance(0.0);
         user.setReferralCode(UUID.randomUUID().toString().substring(0, 8));
@@ -68,7 +70,7 @@ public class UserService {
         UserEntity user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AuthenticationException("Invalid username or password"));
 
-        // In production, compare hashed passwords
+        // TODO: In production, use BCryptPasswordEncoder.matches() for secure password comparison
         if (!user.getPassword().equals(request.getPassword())) {
             throw new AuthenticationException("Invalid username or password");
         }

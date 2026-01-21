@@ -6,7 +6,6 @@ import com.win777.entity.UserEntity;
 import com.win777.exception.ResourceNotFoundException;
 import com.win777.repository.ReferralRepository;
 import com.win777.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,16 +14,19 @@ import java.util.List;
 @Service
 public class ReferralService {
 
-    @Autowired
-    private ReferralRepository referralRepository;
+    private final ReferralRepository referralRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    public ReferralService(ReferralRepository referralRepository, UserRepository userRepository) {
+        this.referralRepository = referralRepository;
+        this.userRepository = userRepository;
+    }
 
     public ReferralTreeDTO getReferralTree(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
         
+        // TODO: Add depth limit and batch loading for deep referral chains
         return buildReferralTree(user);
     }
 

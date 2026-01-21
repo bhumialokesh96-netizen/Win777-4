@@ -4,7 +4,6 @@ import com.win777.dto.BalanceResponseDTO;
 import com.win777.service.BalanceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Balance Management", description = "APIs for viewing user balances")
 public class BalanceController {
 
-    @Autowired
-    private BalanceService balanceService;
+    private final BalanceService balanceService;
+
+    public BalanceController(BalanceService balanceService) {
+        this.balanceService = balanceService;
+    }
 
     @GetMapping("/{userId}")
     @Operation(summary = "Get user balance", description = "Retrieve the current balance for a user")

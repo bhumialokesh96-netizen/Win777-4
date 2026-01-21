@@ -4,7 +4,6 @@ import com.win777.dto.ReferralTreeDTO;
 import com.win777.service.ReferralService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Referral Management", description = "APIs for viewing referral tree")
 public class ReferralController {
 
-    @Autowired
-    private ReferralService referralService;
+    private final ReferralService referralService;
+
+    public ReferralController(ReferralService referralService) {
+        this.referralService = referralService;
+    }
 
     @GetMapping("/tree/{userId}")
     @Operation(summary = "Get referral tree", description = "Retrieve the referral tree for a user")

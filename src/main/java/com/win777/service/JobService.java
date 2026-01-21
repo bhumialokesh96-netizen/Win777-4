@@ -5,7 +5,6 @@ import com.win777.dto.JobResponseDTO;
 import com.win777.entity.JobEntity;
 import com.win777.exception.ResourceNotFoundException;
 import com.win777.repository.JobRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +13,11 @@ import java.util.stream.Collectors;
 @Service
 public class JobService {
 
-    @Autowired
-    private JobRepository jobRepository;
+    private final JobRepository jobRepository;
+
+    public JobService(JobRepository jobRepository) {
+        this.jobRepository = jobRepository;
+    }
 
     public JobResponseDTO initiateJob(Long userId, JobRequestDTO request) {
         JobEntity job = new JobEntity();
