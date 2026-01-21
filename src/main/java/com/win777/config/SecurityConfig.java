@@ -13,6 +13,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            // CSRF protection is disabled for REST API consumed by Android app
+            // For Phase 1, this is acceptable as the API is stateless and token-based auth will be added in Phase 2
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/api/users/register", "/api/users/login", 
