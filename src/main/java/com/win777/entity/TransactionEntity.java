@@ -5,30 +5,26 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "transactions")
 @Data
-public class UserEntity {
+public class TransactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false, unique = true)
-    private String email;
+    private String type; // DEPOSIT, WITHDRAWAL, TRANSFER, etc.
 
     @Column(nullable = false)
-    private Double balance = 0.0;
+    private Double amount;
 
-    @Column(name = "referral_code", unique = true)
-    private String referralCode;
+    @Column(nullable = false)
+    private String status; // PENDING, COMPLETED, FAILED
 
-    @Column(name = "referred_by")
-    private Long referredBy;
+    private String description;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
