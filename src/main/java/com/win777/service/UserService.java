@@ -1,13 +1,16 @@
 package com.win777.service;
 
 import com.win777.dto.*;
+import com.win777.entity.ReferralEntity;
 import com.win777.entity.UserEntity;
 import com.win777.exception.AuthenticationException;
 import com.win777.exception.DuplicateResourceException;
 import com.win777.exception.ResourceNotFoundException;
+import com.win777.repository.ReferralRepository;
 import com.win777.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -17,6 +20,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ReferralRepository referralRepository;
+
+    @Transactional
     public UserDTO register(RegistrationRequestDTO request) {
         // Check if username already exists
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -40,6 +47,17 @@ public class UserService {
             UserEntity referrer = userRepository.findByReferralCode(request.getReferralCode())
                     .orElseThrow(() -> new ResourceNotFoundException("Invalid referral code"));
             user.setReferredBy(referrer.getId());
+            
+            // Save user first to get the ID
+            UserEntity savedUser = userRepository.save(user);
+            
+            // Create referral entry
+            ReferralEntity referral = new ReferralEntity();
+            referral.setReferrerId(referrer.getId());
+            referral.setReferredId(savedUser.getId());
+            referralRepository.save(referral);
+            
+            return convertToDTO(savedUser);
         }
 
         UserEntity savedUser = userRepository.save(user);
